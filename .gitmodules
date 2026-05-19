@@ -1,0 +1,6 @@
+[submodule "cellarbrain"]
+	path = cellarbrain
+	url = https://github.com/urban-buss/cellarbrain.git
+[submodule "recipebrain"]
+	path = recipebrain
+	url = https://github.com/urban-buss/recipebrain.git

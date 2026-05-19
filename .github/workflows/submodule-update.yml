@@ -1,0 +1,90 @@
+name: submodule-update
+
+on:
+  schedule:
+    # Daily at 06:17 UTC.
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    name: Bump submodules to tracked-branch tips
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout parent (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git author
+        run: |
+          git config user.name  "brains-bot"
+          git config user.email "brains-bot@users.noreply.github.com"
+
+      - name: Update submodules to remote tips
+        run: git submodule update --remote --merge --recursive
+
+      - name: Detect pointer changes
+        id: diff
+        run: |
+          if git diff --quiet --cached -- .gitmodules cellarbrain recipebrain && \
+             git diff --quiet -- .gitmodules cellarbrain recipebrain; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Python
+        if: steps.diff.outputs.changed == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify pointers reachable on origin
+        if: steps.diff.outputs.changed == 'true'
+        run: python .github/tools/check-submodule-pointers.py
+
+      - name: Build commit body
+        if: steps.diff.outputs.changed == 'true'
+        id: body
+        run: |
+          {
+            echo "body<<EOF"
+            for sm in cellarbrain recipebrain; do
+              if ! git diff --quiet -- "$sm"; then
+                old=$(git ls-tree HEAD "$sm" | awk '{print $3}')
+                new=$(git -C "$sm" rev-parse HEAD)
+                echo "### $sm"
+                echo ""
+                echo "Old: \`${old:0:12}\`"
+                echo "New: \`${new:0:12}\`"
+                echo ""
+                echo "Commits:"
+                git -C "$sm" log --pretty=format:"- %s" "$old..$new" || true
+                echo ""
+                echo ""
+              fi
+            done
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/submodule-bump
+          delete-branch: true
+          commit-message: "chore(submodules): bump to latest tracked branches"
+          title: "chore(submodules): bump to latest tracked branches"
+          body: ${{ steps.body.outputs.body }}
+          add-paths: |
+            cellarbrain
+            recipebrain
+            .gitmodules

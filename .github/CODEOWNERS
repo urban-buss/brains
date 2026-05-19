@@ -1,0 +1,6 @@
+# Default owner of the parent aggregator repo.
+# Per-brain code is owned in the respective submodule repo, not here.
+
+*                              @urban-buss
+/.github/                      @urban-buss
+/.gitmodules                   @urban-buss

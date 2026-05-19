@@ -1,0 +1,25 @@
+name: submodule-sanity
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pointer-sanity:
+    name: Submodule pointers reachable on origin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout parent (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify every submodule pointer is reachable from origin
+        run: python .github/tools/check-submodule-pointers.py

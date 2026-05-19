@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: cellarbrain issues
+    url: https://github.com/urban-buss/cellarbrain/issues
+    about: Bugs and feature requests specific to cellarbrain belong in its own repo.
+  - name: recipebrain issues
+    url: https://github.com/urban-buss/recipebrain/issues
+    about: Bugs and feature requests specific to recipebrain belong in its own repo.

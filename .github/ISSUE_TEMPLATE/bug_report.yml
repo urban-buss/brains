@@ -1,0 +1,69 @@
+name: Bug report
+description: Report a defect in one of the brains or in the coordinator tooling.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Which brain(s) are affected?
+      multiple: true
+      options:
+        - cellarbrain
+        - recipebrain
+        - parent (coordinator tooling under .github/)
+        - cross-brain (MCP interop)
+        - not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version(s) involved
+      description: "e.g. cellarbrain 0.3.2, recipebrain 0.0.12, or the parent commit SHA."
+    validations:
+      required: false
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: One or two sentences describing the symptom.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal commands or actions that trigger the bug.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: false
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Python version, any relevant tooling (DuckDB, sentence-transformers, …).
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: scope-check
+    attributes:
+      label: Scope confirmation
+      options:
+        - label: I am filing this in the right repo. Brain-specific bugs ideally go in the brain's own repo; this parent repo is for coordinator/aggregator concerns.
+          required: false

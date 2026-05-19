@@ -1,0 +1,40 @@
+name: Feature request
+description: Suggest a feature or improvement.
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Where does this live?
+      options:
+        - cellarbrain
+        - recipebrain
+        - parent (coordinator tooling)
+        - cross-brain (MCP interop)
+        - new brain (proposal)
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What's painful today? Why does it matter?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What would the feature look like? Be concrete; mention CLI flags, MCP tool names, or UI surfaces if relevant.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
