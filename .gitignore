@@ -49,3 +49,10 @@ coverage/
 .proposals/
 .scratch/
 .memories/
+
+# Artefacts / test debris (parent-level)
+MagicMock/
+bkp/
+nonexistent/
+output/
+snapshots/
