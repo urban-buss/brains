@@ -23,3 +23,6 @@ jobs:
 
       - name: Verify every submodule pointer is reachable from origin
         run: python .github/tools/check-submodule-pointers.py
+
+      - name: Verify mirrored meta-files are in sync with .github/_shared/
+        run: python .github/tools/check-meta-drift.py
